@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "AtCoder Enhancer",
+    "description": "AtCoder Enhancer Extension",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup/index.html",
+        "default_icon": "static/icon.png"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "scripts/submissions.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/contests/*/submissions/*"
+            ]
+        }
+    ]
+}
