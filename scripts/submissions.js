@@ -3,7 +3,7 @@ const contest = window.location.pathname.split('/')[2];
 const problem = document.getElementsByTagName('td')[1].innerText[0];
 
 let dialog = document.createElement('dialog');
-dialog.innerHTML = `<p id='testcase-dialog-detail'></p><button id='testcase-dialog-close-btn'>Close</button>`;
+dialog.innerHTML = `<button id='testcase-dialog-close-btn'>Close</button><p id='testcase-dialog-detail'></p><button id='testcase-dialog-close-btn'>Close</button>`;
 
 document.body.appendChild(dialog);
 document
