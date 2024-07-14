@@ -59,7 +59,7 @@ async function showTestcase(item) {
 
         dialogDetail.style.textAlign = 'left'
         dialogDetail.innerHTML = `
-            <b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br>
+            <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br><br>
             <b>Input:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.in}</pre>
             <b>Output:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.out}</pre>
         `;
