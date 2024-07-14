@@ -18,6 +18,14 @@
             "matches": [
                 "https://atcoder.jp/contests/*/submissions/*"
             ]
+        },
+        {
+            "js": [
+                "scripts/task.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/contests/*/tasks/*"
+            ]
         }
     ]
 }
