@@ -1,4 +1,3 @@
-const cells = document.getElementsByTagName('td');
 const contest = window.location.pathname.split('/')[2];
 const problem = document.getElementsByTagName('td')[1].innerText[0];
 
@@ -13,23 +12,18 @@ document
     });
 
 function extractResultData() {
-    const resultCells = [];
-
-    for (let i = 21; i < cells.length; i++) {
-        resultCells.push(cells[i]);
-    }
-
+    const resultCells = document.getElementsByTagName('tbody')[5].children;
     const res = [];
 
     for (let i = 0; i < resultCells.length; i += 4) {
-        const row = resultCells.slice(i, i + 4);
+        const result = resultCells[i].innerText.split('\t');
 
         res.push({
-            index: 21 + i,
-            caseName: row[0].innerText,
-            status: row[1].innerText,
-            execTime: parseInt(row[2].innerText.slice(0, -3)),
-            memory: parseInt(row[3].innerText.slice(0, -3))
+            element: resultCells[i],
+            caseName: result[0],
+            status: result[1],
+            execTime: parseInt(result[2].slice(0, -3)),
+            memory: parseInt(result[3].slice(0, -3))
         });
     }
 
@@ -58,8 +52,8 @@ async function showTestcase(caseName) {
 const results = extractResultData();
 
 for (const i of results) {
-    cells[i.index].style.cursor = 'pointer';
-    cells[i.index].onclick = () => {
+    i.element.style.cursor = 'pointer';
+    i.element.onclick = () => {
         showTestcase(i.caseName);
     };
 }
