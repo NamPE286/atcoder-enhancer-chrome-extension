@@ -2,9 +2,16 @@ const contest = window.location.pathname.split('/')[2];
 const problem = document.getElementsByTagName('td')[1].innerText[0];
 
 let dialog = document.createElement('dialog');
-dialog.innerHTML = `<p id='testcase-dialog-detail'></p><button id='testcase-dialog-close-btn'>Close</button>`;
+let copyBtnHTMLString =
+    '<div class="div-btn-copy"><span class="btn-copy btn-pre" tabindex="0" data-toggle="tooltip" data-trigger="manual" title="" data-target="pre-sample4" data-original-title="Copied!">Copy</span></div>';
+dialog.innerHTML = `<button id='testcase-dialog-close-btn'>x</button><br><div id='testcase-dialog-detail'></div>`;
 
 document.body.appendChild(dialog);
+document.getElementById('testcase-dialog-detail').style.width = '1000px'
+document.getElementById('testcase-dialog-detail').style.maxWidth = '100%'
+document.getElementById('testcase-dialog-close-btn').style.float = 'right'
+document.getElementById('testcase-dialog-close-btn').style.backgroundColor = 'transparent'
+document.getElementById('testcase-dialog-close-btn').style.border = 'none'
 document
     .getElementById('testcase-dialog-close-btn')
     .addEventListener('click', () => {
@@ -31,9 +38,9 @@ function extractResultData() {
 }
 
 async function showTestcase(caseName) {
-    const p = document.getElementById('testcase-dialog-detail');
+    const dialogDetail = document.getElementById('testcase-dialog-detail');
 
-    p.innerHTML = 'Loading...';
+    dialogDetail.innerHTML = 'Loading...';
     dialog.showModal();
 
     try {
@@ -43,9 +50,9 @@ async function showTestcase(caseName) {
             )
         ).json();
 
-        p.innerHTML = `<b>Input:</b><br>${testData.in}<br><b>Output:</b><br>${testData.out}`;
+        dialogDetail.innerHTML = `<b>Input:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.in}</pre><b>Output:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.out}</pre>`;
     } catch {
-        p.innerHTML = 'Not available';
+        dialogDetail.innerHTML = 'Not available';
     }
 }
 
