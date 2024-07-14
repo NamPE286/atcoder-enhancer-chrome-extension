@@ -20,7 +20,8 @@ document.getElementById('show-tags-btn').addEventListener('click', async () => {
         return;
     }
 
-    const tags = res.json();
+    const tags = await res.json();
+    console.log(tags)
     let span = document.createElement('span');
     span.innerText = tags.join(', ');
     document.getElementById('show-tags-btn').replaceWith(span);
