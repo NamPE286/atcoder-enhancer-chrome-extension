@@ -42,13 +42,17 @@ async function showTestcase(caseName) {
     p.innerHTML = 'Loading...';
     dialog.showModal();
 
-    const testData = await (
-        await fetch(
-            `https://atcoder-enhancer-api.fly.dev/contest/${contest}/${problem}/testcase/${caseName}`
-        )
-    ).json();
+    try {
+        const testData = await (
+            await fetch(
+                `https://atcoder-enhancer-api.fly.dev/contest/${contest}/${problem}/testcase/${caseName}`
+            )
+        ).json();
 
-    p.innerHTML = `<b>Input:</b><br>${testData.in}<br><b>Output:</b><br>${testData.out}`;
+        p.innerHTML = `<b>Input:</b><br>${testData.in}<br><b>Output:</b><br>${testData.out}`;
+    } catch {
+        p.innerHTML = 'Not available';
+    }
 }
 
 const results = extractResultData();
