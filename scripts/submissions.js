@@ -15,7 +15,7 @@ function extractResultData() {
     const resultCells = document.getElementsByTagName('tbody')[5].children;
     const res = [];
 
-    for (let i = 0; i < resultCells.length; i += 4) {
+    for (let i = 0; i < resultCells.length; i++) {
         const result = resultCells[i].innerText.split('\t');
 
         res.push({
@@ -49,11 +49,13 @@ async function showTestcase(caseName) {
     }
 }
 
-const results = extractResultData();
+if (window.location.pathname.split('/')[4] != 'me') {
+    const results = extractResultData();
 
-for (const i of results) {
-    i.element.style.cursor = 'pointer';
-    i.element.onclick = () => {
-        showTestcase(i.caseName);
-    };
+    for (const i of results) {
+        i.element.style.cursor = 'pointer';
+        i.element.onclick = () => {
+            showTestcase(i.caseName);
+        };
+    }
 }
