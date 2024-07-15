@@ -7,9 +7,6 @@
         "default_popup": "popup/index.html",
         "default_icon": "static/icon.png"
     },
-    "background": {
-        "service_worker": "background.js"
-    },
     "content_scripts": [
         {
             "js": [
@@ -25,6 +22,14 @@
             ],
             "matches": [
                 "https://atcoder.jp/contests/*/tasks/*"
+            ]
+        },
+        {
+            "js": [
+                "scripts/tasks.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/contests/*/tasks"
             ]
         }
     ]
