@@ -61,8 +61,44 @@ async function fetchProblemTags(problemID) {
     return tags;
 }
 
+function getRatingColor(x) {
+    if (x < 400) {
+        return 'gray';
+    }
+
+    if (x < 800) {
+        return 'brown';
+    }
+
+    if (x < 1200) {
+        return 'green';
+    }
+
+    if (x < 1600) {
+        return '#00c0c0';
+    }
+
+    if (x < 2000) {
+        return 'blue';
+    }
+
+    if (x < 2400) {
+        return '#c0c000';
+    }
+
+    if (x < 2800) {
+        return 'orange';
+    }
+
+    if (x < 3200) {
+        return 'red';
+    }
+
+    return 'darkred';
+}
+
 document.getElementById('task-statement').innerHTML =
-    `Tags: <button id="show-tags-btn">Show</button>` +
+    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <button id="show-rating-btn">Show</button>` +
     document.getElementById('task-statement').innerHTML;
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
@@ -82,6 +118,35 @@ document.getElementById('show-tags-btn').addEventListener('click', async () => {
         document.getElementById('show-tags-btn').replaceWith(span);
     }
 });
+
+document
+    .getElementById('show-rating-btn')
+    .addEventListener('click', async () => {
+        document.getElementById('show-rating-btn').innerText = 'Loading...';
+        document.getElementById('show-rating-btn').disabled = true;
+
+        fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
+            .then((res) => res.json())
+            .then((res) => {
+                if (!res.difficulty) {
+                    throw new Error();
+                }
+
+                let span = document.createElement('span');
+
+                span.innerText = res.difficulty;
+                span.style.fontWeight = 'bold';
+                span.style.color = getRatingColor(res.difficulty);
+
+                document.getElementById('show-rating-btn').replaceWith(span);
+            })
+            .catch((err) => {
+                let span = document.createElement('span');
+
+                span.innerText = 'Not available';
+                document.getElementById('show-rating-btn').replaceWith(span);
+            });
+    });
 
 getStatusElement().then((elem) => {
     if (!elem) {
