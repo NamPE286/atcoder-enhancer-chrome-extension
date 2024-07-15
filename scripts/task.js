@@ -98,7 +98,7 @@ function getRatingColor(x) {
 }
 
 document.getElementById('task-statement').innerHTML =
-    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <button id="show-rating-btn">Show</button>` +
+    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <span id='problem-rating'>...</span>` +
     document.getElementById('task-statement').innerHTML;
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
@@ -119,33 +119,21 @@ document.getElementById('show-tags-btn').addEventListener('click', async () => {
     }
 });
 
-document
-    .getElementById('show-rating-btn')
-    .addEventListener('click', async () => {
-        document.getElementById('show-rating-btn').innerText = 'Loading...';
-        document.getElementById('show-rating-btn').disabled = true;
+fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
+    .then((res) => res.json())
+    .then((res) => {
+        if (!res.difficulty) {
+            throw new Error();
+        }
 
-        fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
-            .then((res) => res.json())
-            .then((res) => {
-                if (!res.difficulty) {
-                    throw new Error();
-                }
-
-                let span = document.createElement('span');
-
-                span.innerText = res.difficulty;
-                span.style.fontWeight = 'bold';
-                span.style.color = getRatingColor(res.difficulty);
-
-                document.getElementById('show-rating-btn').replaceWith(span);
-            })
-            .catch((err) => {
-                let span = document.createElement('span');
-
-                span.innerText = 'Not available';
-                document.getElementById('show-rating-btn').replaceWith(span);
-            });
+        document.getElementById('problem-rating').innerText = res.difficulty;
+        document.getElementById('problem-rating').style.fontWeight = 'bold';
+        document.getElementById('problem-rating').style.color = getRatingColor(
+            res.difficulty
+        );
+    })
+    .catch((err) => {
+        document.getElementById('problem-rating').innerText = 'Not available';
     });
 
 getStatusElement().then((elem) => {
