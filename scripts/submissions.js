@@ -2,6 +2,7 @@ const contest = window.location.pathname.split('/')[2];
 const problem = document.getElementsByTagName('td')[1].innerText[0];
 
 let dialog = document.createElement('dialog');
+let results;
 let copyBtnHTMLString = `
     <div class="div-btn-copy">
         <span class="btn-copy btn-pre" tabindex="0" data-toggle="tooltip" data-trigger="manual" title="" data-target="pre-sample4" data-original-title="Copied!">Copy</span>
@@ -27,19 +28,9 @@ document
     });
 
 function extractResultData() {
-    let resultRows;
     const tables = document.getElementsByTagName('tbody');
-
-    for (let i = tables.length - 1; i >= 0; i--) {
-        const table = tables[i];
-
-        if (table.children[0].childElementCount == 4) {
-            resultRows = table.children;
-            break;
-        }
-    }
-
     const res = [];
+    let resultRows = tables[tables.length - 1].children;
 
     for (let i = 0; i < resultRows.length; i++) {
         const result = resultRows[i].innerText.split('\t');
@@ -90,8 +81,50 @@ async function showTestcase(item) {
     }
 }
 
+function filterTestcase(elem, value) {
+    const tbody = elem.getElementsByTagName('tbody')[0]
+    tbody.innerHTML = ''
+    
+    for(const i of results) {
+        if(i.status == value || value == 'all') {
+            tbody.appendChild(i.element)
+        }
+    }
+}
+
 if (window.location.pathname.split('/')[4] != 'me') {
-    const results = extractResultData();
+    let elem = document.getElementsByClassName('panel panel-default')[document.getElementsByClassName('panel panel-default').length - 1]
+    let cloned = elem.cloneNode(true)
+
+    elem.after(cloned)
+    elem.className = ''
+    elem.innerHTML = `
+        <div id='additional-options'>
+            <div style='display: flex; align-items: center; gap: 5px'>
+                <label style='margin-bottom: -4px'>Filter:</label>
+                <select id='filter-options'>
+                    <option value="all">All</option>
+                    <option value="AC">Accepted</option>
+                    <option value="WA">Wrong answer</option>
+                    <option value="TLE">Time limit exceeded</option>
+                    <option value="MLE">Memory limit exceeded</option>
+                </select>
+            </div>
+        </div>
+    `
+
+    document.getElementById('additional-options').style.cssText = `
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 10px;
+    `
+
+    document.getElementById('filter-options').onchange = () => {
+        filterTestcase(cloned, document.getElementById('filter-options').value)
+    }
+
+    results = extractResultData();
 
     for (const i of results) {
         i.element.style.cursor = 'pointer';
