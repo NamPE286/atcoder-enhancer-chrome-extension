@@ -71,10 +71,20 @@ async function showTestcase(item) {
 
         dialogDetail.style.textAlign = 'left';
         dialogDetail.innerHTML = `
-            <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br><br>
-            <b>Input:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.in}</pre>
-            <b>Output:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.out}</pre>
+            <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br>
+            <button id='toggle-input-btn'>Hide/unhide input</button><br>
+            <div id='testcase-dialog-input' style='display: block'>
+                <b>Input:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.in}</pre>
+            </div>
+            <div id='testcase-dialog-output'>
+                <b>Output:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.out}</pre>
+            </div>
         `;
+
+        document.getElementById('toggle-input-btn').onclick = () => {
+            const display = document.getElementById('testcase-dialog-input').style.display
+            document.getElementById('testcase-dialog-input').style.display = (display == 'block' ? 'none' : 'block')
+        }
     } catch {
         dialogDetail.innerHTML = 'Not available';
     }
