@@ -30,6 +30,37 @@ async function getStatusElement() {
     return tbody.children[0].children[6].children[0];
 }
 
+async function fetchProblemTags(problemID) {
+    const res = await fetch(
+        `https://atcoder-tags.herokuapp.com/check/${problemID}`
+    );
+    const htmlText = await res.text();
+    let objText = '';
+
+    for (
+        let i = htmlText.indexOf("var dict = JSON.parse('{") + 23;
+        i < htmlText.indexOf('var labels = ') + 1000;
+        i++
+    ) {
+        objText += htmlText[i];
+
+        if (htmlText[i] == '}') {
+            break;
+        }
+    }
+
+    let obj = JSON.parse(objText);
+    let tags = [];
+
+    for (const i in obj) {
+        if (obj[i] != 0) {
+            tags.push(i);
+        }
+    }
+
+    return tags;
+}
+
 document.getElementById('task-statement').innerHTML =
     `Tags: <button id="show-tags-btn">Show</button>` +
     document.getElementById('task-statement').innerHTML;
@@ -38,23 +69,18 @@ document.getElementById('show-tags-btn').addEventListener('click', async () => {
     document.getElementById('show-tags-btn').innerText = 'Loading...';
     document.getElementById('show-tags-btn').disabled = true;
 
-    const res = await fetch(
-        `https://atcoder-enhancer-api.fly.dev/problem/${problemID}/tags`
-    );
-
-    if (!res.ok) {
+    try {
+        const tags = await fetchProblemTags(problemID);
         let span = document.createElement('span');
+
+        span.innerText = tags.join(', ');
+        document.getElementById('show-tags-btn').replaceWith(span);
+    } catch {
+        let span = document.createElement('span');
+
         span.innerText = 'Not available';
         document.getElementById('show-tags-btn').replaceWith(span);
-
-        return;
     }
-
-    const tags = await res.json();
-    console.log(tags);
-    let span = document.createElement('span');
-    span.innerText = tags.join(', ');
-    document.getElementById('show-tags-btn').replaceWith(span);
 });
 
 getStatusElement().then((elem) => {
