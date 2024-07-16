@@ -2,8 +2,17 @@ html {
     width: 200px;
 }
 
+.checkboxes {
+    margin-bottom: 10px;
+}
+
 .checkbox {
     display: flex;
     align-items: center;
     gap: 2px;
+}
+
+#apply-button {
+    width: 100%;
+    height: 30px;
 }

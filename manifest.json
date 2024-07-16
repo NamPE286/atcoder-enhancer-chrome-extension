@@ -13,6 +13,14 @@
     "content_scripts": [
         {
             "js": [
+                "scripts/atcoder.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/*"
+            ]
+        },
+        {
+            "js": [
                 "scripts/submissions.js"
             ],
             "matches": [
