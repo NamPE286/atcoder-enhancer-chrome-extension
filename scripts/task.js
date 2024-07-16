@@ -67,7 +67,7 @@ function getRatingColor(x) {
     }
 
     if (x < 800) {
-        return 'brown';
+        return '#804000';
     }
 
     if (x < 1200) {
@@ -127,7 +127,6 @@ fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
         }
 
         document.getElementById('problem-rating').innerText = res.difficulty;
-        document.getElementById('problem-rating').style.fontWeight = 'bold';
         document.getElementById('problem-rating').style.color = getRatingColor(
             res.difficulty
         );

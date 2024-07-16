@@ -4,7 +4,7 @@ function getRatingColor(x) {
     }
 
     if (x < 800) {
-        return 'brown';
+        return '#804000';
     }
 
     if (x < 1200) {
@@ -33,6 +33,8 @@ function getRatingColor(x) {
 
     return 'darkred';
 }
+
+console.log('ok')
 
 const contest = window.location.pathname.split('/')[2];
 
@@ -63,7 +65,6 @@ fetch(`https://atcoder-enhancer-api.fly.dev/contest/${contest}`)
             cloned.innerText = res[i].difficulty
                 ? res[i].difficulty
                 : 'Not available';
-            cloned.style.fontWeight = 'bold';
             cloned.style.color = getRatingColor(res[i].difficulty);
 
             rows[i].children[1].after(cloned);
