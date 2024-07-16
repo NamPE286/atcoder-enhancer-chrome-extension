@@ -40,7 +40,8 @@
                 "https://atcoder.jp/contests/*"
             ],
             "exclude_matches": [
-                "https://atcoder.jp/contests/*/*"
+                "https://atcoder.jp/contests/*/*",
+                "https://atcoder.jp/contests/archive"
             ]
         }
     ]
