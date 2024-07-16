@@ -7,6 +7,9 @@
         "default_popup": "popup/index.html",
         "default_icon": "static/icon.png"
     },
+    "permissions": [
+        "storage"
+    ],
     "content_scripts": [
         {
             "js": [
