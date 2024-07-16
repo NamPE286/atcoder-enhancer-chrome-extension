@@ -61,43 +61,65 @@ async function showTestcase(item) {
         ).json();
 
         dialogDetail.style.textAlign = 'left';
+
+        const copyInput = document.createElement('div');
+        copyInput.id = 'copy-input-btn'
+        copyInput.innerHTML = copyBtnHTMLString;
+
+
+        const copyOutput = document.createElement('div');
+        copyOutput.innerHTML = copyBtnHTMLString;
+        copyOutput.id = 'copy-output-btn'
+
         dialogDetail.innerHTML = `
             <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br>
             <button id='toggle-input-btn'>Hide/unhide input</button><br>
             <div id='testcase-dialog-input' style='display: block'>
-                <b>Input:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.in}</pre>
+                <b>Input:</b>${copyInput.outerHTML}<pre id="pre-sample6">${testData.in}</pre>
             </div>
             <div id='testcase-dialog-output'>
-                <b>Output:</b>${copyBtnHTMLString}<pre id="pre-sample6">${testData.out}</pre>
+                <b>Output:</b>${copyOutput.outerHTML}<pre id="pre-sample6">${testData.out}</pre>
             </div>
         `;
 
+        document.getElementById('copy-input-btn').onclick = () => {
+            navigator.clipboard.writeText(testData.in);
+        };
+
+        document.getElementById('copy-output-btn').onclick = () => {
+            navigator.clipboard.writeText(testData.out);
+        };
+
         document.getElementById('toggle-input-btn').onclick = () => {
-            const display = document.getElementById('testcase-dialog-input').style.display
-            document.getElementById('testcase-dialog-input').style.display = (display == 'block' ? 'none' : 'block')
-        }
+            const display = document.getElementById('testcase-dialog-input')
+                .style.display;
+            document.getElementById('testcase-dialog-input').style.display =
+                display == 'block' ? 'none' : 'block';
+        };
     } catch {
         dialogDetail.innerHTML = 'Not available';
     }
 }
 
 function filterTestcase(elem, value) {
-    const tbody = elem.getElementsByTagName('tbody')[0]
-    tbody.innerHTML = ''
-    
-    for(const i of results) {
-        if(i.status == value || value == 'all') {
-            tbody.appendChild(i.element)
+    const tbody = elem.getElementsByTagName('tbody')[0];
+    tbody.innerHTML = '';
+
+    for (const i of results) {
+        if (i.status == value || value == 'all') {
+            tbody.appendChild(i.element);
         }
     }
 }
 
 if (window.location.pathname.split('/')[4] != 'me') {
-    let elem = document.getElementsByClassName('panel panel-default')[document.getElementsByClassName('panel panel-default').length - 1]
-    let cloned = elem.cloneNode(true)
+    let elem = document.getElementsByClassName('panel panel-default')[
+        document.getElementsByClassName('panel panel-default').length - 1
+    ];
+    let cloned = elem.cloneNode(true);
 
-    elem.after(cloned)
-    elem.className = ''
+    elem.after(cloned);
+    elem.className = '';
     elem.innerHTML = `
         <div id='additional-options'>
             <div style='display: flex; align-items: center; gap: 5px'>
@@ -111,18 +133,18 @@ if (window.location.pathname.split('/')[4] != 'me') {
                 </select>
             </div>
         </div>
-    `
+    `;
 
     document.getElementById('additional-options').style.cssText = `
         display: flex;
         gap: 20px;
         align-items: center;
         margin-bottom: 10px;
-    `
+    `;
 
     document.getElementById('filter-options').onchange = () => {
-        filterTestcase(cloned, document.getElementById('filter-options').value)
-    }
+        filterTestcase(cloned, document.getElementById('filter-options').value);
+    };
 
     results = extractResultData();
 
