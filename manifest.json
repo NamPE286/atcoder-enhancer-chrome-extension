@@ -50,7 +50,8 @@
                 "scripts/contestArchive.js"
             ],
             "matches": [
-                "https://atcoder.jp/contests/archive*"
+                "https://atcoder.jp/contests/archive*",
+                "https://atcoder.jp/contests/"
             ]
         }
     ]

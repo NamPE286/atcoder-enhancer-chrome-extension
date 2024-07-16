@@ -23,7 +23,9 @@ async function getAllContestProblemCount() {
 }
 
 function getStartEndTime() {
-    const tbody = document.getElementsByTagName('tbody')[0].children;
+    const tbody = window.location.pathname.split('/')[2].length
+        ? document.getElementsByTagName('tbody')[0].children
+        : document.getElementsByTagName('tbody')[2].children;
     const startDateString = tbody[0].children[0].children[0].innerText;
     const endDateString =
         tbody[tbody.length - 1].children[0].children[0].innerText;
@@ -79,14 +81,14 @@ async function getContestState() {
         }
     }
 
-    console.log(contestProblemCount, contestSubmissionCount, res)
-
     return res;
 }
 
 async function main() {
     const contestState = await getContestState();
-    const tbody = document.getElementsByTagName('tbody')[0].children;
+    const tbody = window.location.pathname.split('/')[2].length
+        ? document.getElementsByTagName('tbody')[0].children
+        : document.getElementsByTagName('tbody')[2].children;
 
     for (let i = 0; i < tbody.length; i++) {
         const elem = tbody[i].children[1];
