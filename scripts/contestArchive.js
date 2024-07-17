@@ -68,46 +68,46 @@ async function getAllContestSubmissionCount() {
     return count;
 }
 
-async function getContestState() {
-    const contestProblemCount = await getAllContestProblemCount();
-    const contestSubmissionCount = await getAllContestSubmissionCount();
-    const res = {};
-
-    for (const i in contestSubmissionCount) {
-        if (contestProblemCount[i] != contestSubmissionCount[i]) {
-            res[i] = 0;
-        } else {
-            res[i] = 1;
-        }
-    }
-
-    return res;
-}
-
 async function main() {
-    const contestState = await getContestState();
+    const contestProblemCount = await getAllContestProblemCount();
+    const contestACCount = await getAllContestSubmissionCount();
     const tbody = window.location.pathname.split('/')[2].length
         ? document.getElementsByTagName('tbody')[0].children
         : document.getElementsByTagName('tbody')[2].children;
+    const thead = window.location.pathname.split('/')[2].length
+        ? document.getElementsByTagName('thead')[0].children
+        : document.getElementsByTagName('thead')[2].children;
+
+    const cloned = thead[0].children[2].cloneNode(true);
+
+    cloned.innerText = 'Solved';
+    thead[0].children[2].before(cloned);
 
     for (let i = 0; i < tbody.length; i++) {
+        let contest = '';
         const elem = tbody[i].children[1];
         const index = elem.innerHTML.indexOf('href=');
-        let contest = '';
 
         for (let j = index + 6; elem.innerHTML[j] != '"'; j++) {
             contest += elem.innerHTML[j];
         }
 
         contest = contest.split('/')[2];
+        const cloned = tbody[i].children[2].cloneNode(true);
 
-        if (!(contest in contestState)) {
+        cloned.innerText =
+            (contestACCount[contest] ? contestACCount[contest] : 0) +
+            '/' +
+            contestProblemCount[contest];
+        tbody[i].children[2].before(cloned);
+
+        if (!(contest in contestACCount)) {
             continue;
         }
 
-        if (contestState[contest] == 0) {
+        if (contestProblemCount[contest] != contestACCount[contest]) {
             elem.style.backgroundColor = '#fcff63';
-        } else if (contestState[contest] == 1) {
+        } else {
             elem.style.backgroundColor = '#52ff60';
         }
     }
