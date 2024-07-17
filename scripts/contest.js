@@ -34,39 +34,42 @@ function getRatingColor(x) {
     return 'darkred';
 }
 
-console.log('ok')
-
 const contest = window.location.pathname.split('/')[2];
 
-fetch(`https://atcoder-enhancer-api.fly.dev/contest/${contest}`)
-    .then((res) => res.json())
-    .then((res) => {
-        console.log(res);
-        let clonedHead = document
-            .getElementsByTagName('thead')
-            [
-                document.getElementsByTagName('thead').length - 1
-            ].children[0].children[1].cloneNode(true);
-        clonedHead.innerText = 'Rating';
-        document
-            .getElementsByTagName('thead')
-            [
-                document.getElementsByTagName('thead').length - 1
-            ].children[0].children[1].after(clonedHead);
+chrome.storage.sync.get('settings.ratingHidden').then((res) => {
+    if (res['settings.ratingHidden']) {
+        return;
+    }
 
-        const rows =
-            document.getElementsByTagName('tbody')[
-                document.getElementsByTagName('tbody').length - 1
-            ].children;
+    fetch(`https://atcoder-enhancer-api.fly.dev/contest/${contest}`)
+        .then((res) => res.json())
+        .then((res) => {
+            let clonedHead = document
+                .getElementsByTagName('thead')
+                [
+                    document.getElementsByTagName('thead').length - 1
+                ].children[0].children[1].cloneNode(true);
+            clonedHead.innerText = 'Rating';
+            document
+                .getElementsByTagName('thead')
+                [
+                    document.getElementsByTagName('thead').length - 1
+                ].children[0].children[1].after(clonedHead);
 
-        for (let i = 0; i < rows.length; i++) {
-            let cloned = rows[i].children[1].cloneNode(true);
+            const rows =
+                document.getElementsByTagName('tbody')[
+                    document.getElementsByTagName('tbody').length - 1
+                ].children;
 
-            cloned.innerText = res[i].difficulty
-                ? res[i].difficulty
-                : 'Not available';
-            cloned.style.color = getRatingColor(res[i].difficulty);
+            for (let i = 0; i < rows.length; i++) {
+                let cloned = rows[i].children[1].cloneNode(true);
 
-            rows[i].children[1].after(cloned);
-        }
-    });
+                cloned.innerText = res[i].difficulty
+                    ? res[i].difficulty
+                    : 'Not available';
+                cloned.style.color = getRatingColor(res[i].difficulty);
+
+                rows[i].children[1].after(cloned);
+            }
+        });
+});

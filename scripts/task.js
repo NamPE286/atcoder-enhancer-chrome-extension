@@ -97,8 +97,27 @@ function getRatingColor(x) {
     return 'darkred';
 }
 
+function showRating() {
+    fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
+        .then((res) => res.json())
+        .then((res) => {
+            if (!res.difficulty) {
+                throw new Error();
+            }
+
+            document.getElementById('problem-rating').innerText =
+                res.difficulty;
+            document.getElementById('problem-rating').style.color =
+                getRatingColor(res.difficulty);
+        })
+        .catch((err) => {
+            document.getElementById('problem-rating').innerText =
+                'Not available';
+        });
+}
+
 document.getElementById('task-statement').innerHTML =
-    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <span id='problem-rating'>...</span>` +
+    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <button id="show-rating-btn">Show</button>` +
     document.getElementById('task-statement').innerHTML;
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
@@ -119,21 +138,27 @@ document.getElementById('show-tags-btn').addEventListener('click', async () => {
     }
 });
 
-fetch(`https://atcoder-enhancer-api.fly.dev/problem/${problemID}`)
-    .then((res) => res.json())
-    .then((res) => {
-        if (!res.difficulty) {
-            throw new Error();
-        }
+document
+    .getElementById('show-rating-btn')
+    .addEventListener('click', async () => {
+        document.getElementById('show-rating-btn').innerText = 'Loading...';
+        document.getElementById('show-rating-btn').disabled = true;
 
-        document.getElementById('problem-rating').innerText = res.difficulty;
-        document.getElementById('problem-rating').style.color = getRatingColor(
-            res.difficulty
-        );
-    })
-    .catch((err) => {
-        document.getElementById('problem-rating').innerText = 'Not available';
+        const span = document.createElement('span');
+        span.id = 'problem-rating';
+        span.innerText = '...';
+
+        document.getElementById('show-rating-btn').replaceWith(span);
+        showRating();
     });
+
+chrome.storage.sync.get('settings.ratingHidden').then((res) => {
+    if (res['settings.ratingHidden']) {
+        return;
+    }
+
+    document.getElementById('show-rating-btn').click();
+});
 
 getStatusElement().then((elem) => {
     if (!elem) {
