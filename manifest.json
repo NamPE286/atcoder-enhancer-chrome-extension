@@ -64,6 +64,25 @@
                 "https://atcoder.jp/contests/archive*",
                 "https://atcoder.jp/contests/"
             ]
+        },
+        {
+            "js": [
+                "scripts/userNavbar.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/users/*"
+            ],
+            "exclude_matches": [
+                "https://atcoder.jp/users/*/submissions"
+            ]
+        },
+        {
+            "js": [
+                "scripts/userSubmissions.js"
+            ],
+            "matches": [
+                "https://atcoder.jp/users/*/submissions"
+            ]
         }
     ]
 }
