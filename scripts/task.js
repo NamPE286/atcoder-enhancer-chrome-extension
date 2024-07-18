@@ -120,14 +120,9 @@ function showRating() {
 }
 
 document.getElementsByTagName('p')[12].innerHTML =
-    `Tags : <button class='eye-btn' id="show-tags-btn">${eyeSVG}</button><br>Rating : <button class='eye-btn' id="show-rating-btn">${eyeSVG}</button><br>` +
+    `Tags : <span class='eye-btn' id="show-tags-btn">${eyeSVG}</span><br>Rating : <span class='eye-btn' id="show-rating-btn">${eyeSVG}</span><br>` +
     document.getElementsByTagName('p')[12].innerHTML;
 document.getElementsByTagName('p')[12].style.lineHeight = '22px';
-
-for(const i of document.getElementsByClassName('eye-btn')) {
-    i.style.backgroundColor = 'transparent'
-    i.style.border = 'transparent'
-}
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
     document.getElementById('show-tags-btn').innerText = 'Loading...';
