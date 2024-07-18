@@ -1,5 +1,8 @@
 const contest = window.location.pathname.split('/')[2];
 const problemID = window.location.pathname.split('/')[4];
+const eyeSVG = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z"/></svg>
+`;
 
 async function getStatusElement() {
     console.log(
@@ -116,9 +119,15 @@ function showRating() {
         });
 }
 
-document.getElementById('task-statement').innerHTML =
-    `Tags : <button id="show-tags-btn">Show</button><br>Rating : <button id="show-rating-btn">Show</button>` +
-    document.getElementById('task-statement').innerHTML;
+document.getElementsByTagName('p')[12].innerHTML =
+    `Tags : <button class='eye-btn' id="show-tags-btn">${eyeSVG}</button><br>Rating : <button class='eye-btn' id="show-rating-btn">${eyeSVG}</button><br>` +
+    document.getElementsByTagName('p')[12].innerHTML;
+document.getElementsByTagName('p')[12].style.lineHeight = '22px';
+
+for(const i of document.getElementsByClassName('eye-btn')) {
+    i.style.backgroundColor = 'transparent'
+    i.style.border = 'transparent'
+}
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
     document.getElementById('show-tags-btn').innerText = 'Loading...';
