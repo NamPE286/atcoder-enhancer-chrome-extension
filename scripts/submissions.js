@@ -63,14 +63,14 @@ async function showTestcase(item) {
         dialogDetail.style.textAlign = 'left';
 
         const copyInput = document.createElement('div');
-        copyInput.id = 'copy-input-btn'
+        copyInput.id = 'copy-input-btn';
         copyInput.innerHTML = copyBtnHTMLString;
-
 
         const copyOutput = document.createElement('div');
         copyOutput.innerHTML = copyBtnHTMLString;
-        copyOutput.id = 'copy-output-btn'
+        copyOutput.id = 'copy-output-btn';
 
+        dialogDetail.style.border = '2px solid gray';
         dialogDetail.innerHTML = `
             <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br>
             <button id='toggle-input-btn'>Hide/unhide input</button><br>
