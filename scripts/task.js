@@ -119,9 +119,14 @@ function showRating() {
         });
 }
 
-document.getElementsByClassName('lang')[0].innerHTML =
-    `Tags : <div class='eye-btn' id="show-tags-btn" style="display: inline">${eyeSVG}</div><br>Rating : <div class='eye-btn' id="show-rating-btn" style="display: inline">${eyeSVG}</div><br>` +
-    document.getElementsByClassName('lang')[0].innerHTML;
+const infoDiv = document.createElement('div');
+infoDiv.innerHTML = `Tags : <div class='eye-btn' id="show-tags-btn" style="display: inline">${eyeSVG}</div><br>Rating : <div class='eye-btn' id="show-rating-btn" style="display: inline">${eyeSVG}</div><br>`;
+document
+    .getElementsByClassName('lang')[0]
+    .insertBefore(
+        infoDiv,
+        document.getElementsByClassName('lang')[0].firstChild
+    );
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
     document.getElementById('show-tags-btn').innerText = 'Loading...';
