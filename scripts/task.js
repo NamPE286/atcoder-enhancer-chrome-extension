@@ -119,26 +119,26 @@ function showRating() {
         });
 }
 
-document.getElementsByTagName('p')[12].innerHTML =
-    `Tags : <span class='eye-btn' id="show-tags-btn">${eyeSVG}</span><br>Rating : <span class='eye-btn' id="show-rating-btn">${eyeSVG}</span><br>` +
-    document.getElementsByTagName('p')[12].innerHTML;
-document.getElementsByTagName('p')[12].style.lineHeight = '22px';
+document.getElementsByClassName('lang')[0].innerHTML =
+    `Tags : <div class='eye-btn' id="show-tags-btn" style="display: inline">${eyeSVG}</div><br>Rating : <div class='eye-btn' id="show-rating-btn" style="display: inline">${eyeSVG}</div><br>` +
+    document.getElementsByClassName('lang')[0].innerHTML;
 
 document.getElementById('show-tags-btn').addEventListener('click', async () => {
     document.getElementById('show-tags-btn').innerText = 'Loading...';
-    document.getElementById('show-tags-btn').disabled = true;
 
     try {
         const tags = await fetchProblemTags(problemID);
-        let span = document.createElement('span');
+        let div = document.createElement('div');
 
-        span.innerText = tags.join(', ');
-        document.getElementById('show-tags-btn').replaceWith(span);
+        div.innerText = tags.join(', ');
+        div.style.display = 'inline';
+        document.getElementById('show-tags-btn').replaceWith(div);
     } catch {
-        let span = document.createElement('span');
+        let div = document.createElement('div');
 
-        span.innerText = 'Not available';
-        document.getElementById('show-tags-btn').replaceWith(span);
+        div.innerText = 'Not available';
+        div.style.display = 'inline';
+        document.getElementById('show-tags-btn').replaceWith(div);
     }
 });
 
@@ -146,13 +146,13 @@ document
     .getElementById('show-rating-btn')
     .addEventListener('click', async () => {
         document.getElementById('show-rating-btn').innerText = 'Loading...';
-        document.getElementById('show-rating-btn').disabled = true;
 
-        const span = document.createElement('span');
-        span.id = 'problem-rating';
-        span.innerText = '...';
+        const div = document.createElement('div');
+        div.id = 'problem-rating';
+        div.innerText = '...';
+        div.style.display = 'inline';
 
-        document.getElementById('show-rating-btn').replaceWith(span);
+        document.getElementById('show-rating-btn').replaceWith(div);
         showRating();
     });
 
