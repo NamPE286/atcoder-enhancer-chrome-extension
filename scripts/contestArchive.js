@@ -2,6 +2,18 @@ const user = document
     .getElementsByClassName('dropdown-toggle')[1]
     .innerText.trim();
 
+function getTableIndex() {
+    const elems = document.getElementsByTagName('h3');
+
+    for (let i = 0; i < elems.length; i++) {
+        if (elems[i].innerText == 'Recent Contests') {
+            return i - 1;
+        }
+    }
+
+    return -1;
+}
+
 async function getAllContestProblemCount() {
     const contests = await (
         await fetch(
@@ -25,7 +37,7 @@ async function getAllContestProblemCount() {
 function getStartEndTime() {
     const tbody = window.location.pathname.split('/')[2].length
         ? document.getElementsByTagName('tbody')[0].children
-        : document.getElementsByTagName('tbody')[2].children;
+        : document.getElementsByTagName('tbody')[getTableIndex()].children;
     const startDateString = tbody[0].children[0].children[0].innerText;
     const endDateString =
         tbody[tbody.length - 1].children[0].children[0].innerText;
@@ -43,6 +55,7 @@ async function getAllContestSubmissionCount() {
             `https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=${user}&from_second=${start}`
         )
     ).json();
+
     const count = {};
 
     for (const i of submissions) {
@@ -73,10 +86,10 @@ async function main() {
     const contestACCount = await getAllContestSubmissionCount();
     const tbody = window.location.pathname.split('/')[2].length
         ? document.getElementsByTagName('tbody')[0].children
-        : document.getElementsByTagName('tbody')[2].children;
+        : document.getElementsByTagName('tbody')[getTableIndex()].children;
     const thead = window.location.pathname.split('/')[2].length
         ? document.getElementsByTagName('thead')[0].children
-        : document.getElementsByTagName('thead')[2].children;
+        : document.getElementsByTagName('thead')[getTableIndex()].children;
 
     const cloned = thead[0].children[2].cloneNode(true);
 
