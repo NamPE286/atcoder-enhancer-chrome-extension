@@ -1,6 +1,6 @@
 const contest = window.location.pathname.split('/')[2];
 const tableRows = document.getElementsByTagName('tbody')[0].children;
-const problemStatusElements = [];
+const problemStatus = new Array(tableRows.length).fill(null);
 
 function wait(ms) {
     var start = Date.now(),
@@ -11,37 +11,45 @@ function wait(ms) {
 }
 
 async function main() {
-    for (let i = 0; i < tableRows.length; i++) {
-        const problemID = contest + '_' + String.fromCharCode(97 + i);
-
+    for (let i = 1; true; i++) {
         console.log(
-            `Fetching https://atcoder.jp/contests/${contest}/submissions/me?desc=true&f.Task=${problemID}&orderBy=score ...`
+            `Fetching https://atcoder.jp/contests/${contest}/submissions/me?desc=true&orderBy=score&page=${i} ...`
         );
 
         const res = await (
             await fetch(
-                `https://atcoder.jp/contests/${contest}/submissions/me?desc=true&f.Task=${problemID}&orderBy=score`
+                `https://atcoder.jp/contests/${contest}/submissions/me?desc=true&orderBy=score&page=${i}`
             )
         ).text();
 
-        const tagStartIndex = res.indexOf('<tbody>') + 7;
-        const tagEndIndex = res.indexOf('</tbody>');
-        let tbodyHTMLString = '';
+        const elem = document.createElement('div');
+        elem.innerHTML = res;
 
-        for (let j = tagStartIndex; j < tagEndIndex; j++) {
-            tbodyHTMLString += res[j];
+        const tbody = elem.getElementsByTagName('tbody');
+
+        if (tbody.length == 0) {
+            break;
         }
 
-        if (!tbodyHTMLString) {
-            problemStatusElements.push(null);
-            
-            continue;
+        const rows = tbody[0].children;
+
+        for (const row of rows) {
+            const index =
+                row
+                    .getElementsByTagName('a')[0]
+                    .href.split('_')
+                    .at(-1)
+                    .toLowerCase()
+                    .charCodeAt(0) - 97;
+            const statusElem = row.children[6].getElementsByTagName('span')[0];
+
+            if (
+                problemStatus[index] == null ||
+                problemStatus[index].innerText != 'AC'
+            ) {
+                problemStatus[index] = statusElem;
+            }
         }
-
-        const tbody = document.createElement('tbody');
-
-        tbody.innerHTML = tbodyHTMLString;
-        problemStatusElements.push(tbody.children[0].children[6].children[0]);
     }
 
     const statusCell = document
@@ -57,8 +65,8 @@ async function main() {
             .getElementsByTagName('thead')[0]
             .children[0].children[0].cloneNode(true);
 
-        if (problemStatusElements[i]) {
-            cloned.appendChild(problemStatusElements[i]);
+        if (problemStatus[i]) {
+            cloned.appendChild(problemStatus[i]);
         } else {
             cloned.innerHTML = '-';
         }
