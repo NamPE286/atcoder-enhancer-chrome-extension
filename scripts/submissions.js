@@ -76,7 +76,7 @@ async function showTestcase(item) {
         console.log(`${totalFileSize / 1000}KB`);
 
         if (
-            totalFileSize > 5000 &&
+            totalFileSize > 10240 &&
             !confirm(
                 `This testcase is large (${getFileSize(
                     totalFileSize
