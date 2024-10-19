@@ -13,6 +13,8 @@ dialog.innerHTML = `
     <button id='testcase-dialog-close-btn'>x</button><br>
     <div id='testcase-dialog-detail'></div>
 `;
+dialog.style.border = '2px solid gray';
+dialog.style.borderRadius = '5px';
 
 document.body.appendChild(dialog);
 document.getElementById('testcase-dialog-detail').style.width = '1000px';
@@ -47,6 +49,16 @@ function extractResultData() {
     return res;
 }
 
+function getFileSize(x) {
+    if (x < 1024) {
+        return `${x} B`;
+    } else if (x < 1048576) {
+        return `${(x / 1024).toFixed(2)} KB`;
+    }
+
+    return `${(x / 1048576).toFixed(2)} MB`;
+}
+
 async function showTestcase(item) {
     const dialogDetail = document.getElementById('testcase-dialog-detail');
     dialogDetail.style.textAlign = 'center';
@@ -54,24 +66,48 @@ async function showTestcase(item) {
     dialog.showModal();
 
     try {
-        const testData = await (
+        const metadata = await (
             await fetch(
-                `https://atcoder-enhancer-api.fly.dev/contest/${contest}/${problem}/testcase/${item.caseName}`
+                `https://atcoder-enhancer-api.fly.dev/contest/${contest}/${problem}/testcase/${item.caseName}/metadata`
             )
         ).json();
 
-        dialogDetail.style.textAlign = 'left';
+        const totalFileSize = metadata.in + metadata.out;
+        console.log(`${totalFileSize / 1000}KB`);
 
-        const copyInput = document.createElement('div');
-        copyInput.id = 'copy-input-btn';
-        copyInput.innerHTML = copyBtnHTMLString;
+        if (
+            totalFileSize > 5000 &&
+            !confirm(
+                `This testcase is large (${getFileSize(
+                    totalFileSize
+                )}). Do you want to load this testcase?`
+            )
+        ) {
+            dialog.close();
+            return;
+        }
+    } catch {
+        dialogDetail.innerHTML = 'Not available';
+        return;
+    }
 
-        const copyOutput = document.createElement('div');
-        copyOutput.innerHTML = copyBtnHTMLString;
-        copyOutput.id = 'copy-output-btn';
+    const testData = await (
+        await fetch(
+            `https://atcoder-enhancer-api.fly.dev/contest/${contest}/${problem}/testcase/${item.caseName}`
+        )
+    ).json();
 
-        dialogDetail.style.border = '2px solid gray';
-        dialogDetail.innerHTML = `
+    dialogDetail.style.textAlign = 'left';
+
+    const copyInput = document.createElement('div');
+    copyInput.id = 'copy-input-btn';
+    copyInput.innerHTML = copyBtnHTMLString;
+
+    const copyOutput = document.createElement('div');
+    copyOutput.innerHTML = copyBtnHTMLString;
+    copyOutput.id = 'copy-output-btn';
+
+    dialogDetail.innerHTML = `
             <b>Case Name: </b> ${item.caseName}<br><b>Status:</b> ${item.status}; <b>Exec Time:</b> ${item.execTime}ms; <b>Memory:</b> ${item.memory}KB<br>
             <button id='toggle-input-btn'>Hide/unhide input</button><br>
             <div id='testcase-dialog-input' style='display: block'>
@@ -82,23 +118,20 @@ async function showTestcase(item) {
             </div>
         `;
 
-        document.getElementById('copy-input-btn').onclick = () => {
-            navigator.clipboard.writeText(testData.in);
-        };
+    document.getElementById('copy-input-btn').onclick = () => {
+        navigator.clipboard.writeText(testData.in);
+    };
 
-        document.getElementById('copy-output-btn').onclick = () => {
-            navigator.clipboard.writeText(testData.out);
-        };
+    document.getElementById('copy-output-btn').onclick = () => {
+        navigator.clipboard.writeText(testData.out);
+    };
 
-        document.getElementById('toggle-input-btn').onclick = () => {
-            const display = document.getElementById('testcase-dialog-input')
-                .style.display;
-            document.getElementById('testcase-dialog-input').style.display =
-                display == 'block' ? 'none' : 'block';
-        };
-    } catch {
-        dialogDetail.innerHTML = 'Not available';
-    }
+    document.getElementById('toggle-input-btn').onclick = () => {
+        const display = document.getElementById('testcase-dialog-input').style
+            .display;
+        document.getElementById('testcase-dialog-input').style.display =
+            display == 'block' ? 'none' : 'block';
+    };
 }
 
 function filterTestcase(elem, value) {
